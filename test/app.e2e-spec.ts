@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from 'src/app.module';
 import { AuthDto } from 'src/auth/dto';
-import { CreateBookmarkDto, EditBookmarkDto } from '../src/bookmark/dto';
+import { CreateBookmarkDto, EditBookmarkDto } from 'src/bookmark/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { EditUserDto } from '../src/user/dto';
+import { EditUserDto } from 'src/user/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -22,7 +22,6 @@ describe('App e2e', () => {
         whitelist: true,
       }),
     );
-
     await app.init();
     await app.listen(3333);
 
@@ -37,7 +36,7 @@ describe('App e2e', () => {
 
   describe('Auth', () => {
     const dto: AuthDto = {
-      email: 'mayuraalahakoon@gmail.com',
+      email: 'vlad@gmail.com',
       password: '123',
     };
     describe('Signup', () => {
@@ -62,7 +61,6 @@ describe('App e2e', () => {
       it('should throw if no body provided', () => {
         return pactum.spec().post('/auth/signup').expectStatus(400);
       });
-
       it('should signup', () => {
         return pactum
           .spec()
@@ -71,6 +69,7 @@ describe('App e2e', () => {
           .expectStatus(201);
       });
     });
+
     describe('Signin', () => {
       it('should throw if email empty', () => {
         return pactum
@@ -109,13 +108,14 @@ describe('App e2e', () => {
       it('should get current user', () => {
         return pactum
           .spec()
-          .get('/user/me')
+          .get('/users/me')
           .withHeaders({
-            Authrization: 'Bearer $S{userAt}',
+            Authorization: 'Bearer $S{userAt}',
           })
           .expectStatus(200);
       });
     });
+
     describe('Edit user', () => {
       it('should edit user', () => {
         const dto: EditUserDto = {
@@ -135,6 +135,7 @@ describe('App e2e', () => {
       });
     });
   });
+
   describe('Bookmarks', () => {
     describe('Get empty bookmarks', () => {
       it('should get bookmarks', () => {
